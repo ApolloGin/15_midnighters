@@ -3,14 +3,13 @@ import pytz
 import datetime
 
 def load_attempts():
-    api_template = 'https://devman.org/api/challenges/solution_attempts/'\
-    '?page={page}'
-    response = requests.get(api_template.format(page=1))
+    api_url = 'https://devman.org/api/challenges/solution_attempts/'
+    response = requests.get(api_url, params={'page': 1})
     pages = response.json()['number_of_pages']
-    for page in range(1,pages + 1):
-        response = requests.get(api_template.format(page=page))
+    for page in range(2, pages+1):
         for record in response.json()['records']:
             yield record
+        response = requests.get(api_url, params={'page': page})
 
 def get_midnighters(records):
     for record in records:
